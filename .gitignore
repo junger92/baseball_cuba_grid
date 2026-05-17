@@ -1,0 +1,54 @@
+# Archivo de datos real (¡nunca lo subas!)
+data.json
+baseball_cuba_data test.db
+main.py
+
+# Archivos de ejemplo o mock (si los generas, puedes excluirlos también)
+data.json.mock
+data.json.example
+
+# Entornos virtuales de Python
+venv/
+env/
+ENV/
+.venv/
+
+# Archivos de caché de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Archivos de configuración local
+*.local
+.env
+.flaskenv
+
+# Archivos de base de datos SQLite (si los hubiera)
+*.db
+*.sqlite
+*.sqlite3
+
+# Archivos de logs
+*.log
+
+# Archivos de editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de pruebas
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Archivos de despliegue (si no quieres subir los generados)
+dist/
+build/
+*.egg-info/"data.json" 
