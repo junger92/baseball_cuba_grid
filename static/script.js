@@ -79,8 +79,10 @@ function renderGrid() {
 
 // Convierte nombre del equipo a ruta de imagen (minúsculas, espacios reemplazados por _)
 function getTeamLogoUrl(teamName) {
-    const slug = teamName.toLowerCase().replace(/ /g, '_');
-    return `/team_logos/${slug}.png`;  // La ruta es absoluta desde la raíz
+    // Normalizar: minúsculas, reemplazar espacios por _, eliminar acentos
+    let slug = teamName.toLowerCase().replace(/ /g, '_');
+    slug = slug.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    return `/team_logos/${slug}.png`;
 }
 
 // Crea celda de cabecera (fila o columna) con logo + nombre
