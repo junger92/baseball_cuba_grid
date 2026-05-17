@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>BASEBALL CUBA GRID</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+</head>
+
+<!-- Modal de bienvenida -->
+<div id="welcomeModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2>⚾ Bienvenido a Baseball Cuba Grid</h2>
+        <div class="modal-body">
+            <h3>¿Cómo se juega?</h3>
+            <p>Completa la cuadrícula de 3x3 colocando un jugador en cada celda que cumpla <strong>ambas condiciones</strong>:</p>
+            <ul>
+                <li><strong>Fila</strong> → Equipo A</li>
+                <li><strong>Columna</strong> → Equipo B (primeras dos columnas) o un logro (tercera columna)</li>
+            </ul>
+            <p>El jugador debe haber jugado para ambos equipos (columnas 1 y 2) o haber alcanzado el logro (columna 3).</p>
+            
+            <h3>Reglas</h3>
+            <ul>
+                <li>Solo tienes <strong>9 intentos</strong> (una celda por turno).</li>
+                <li>No se pueden repetir jugadores en distintas celdas.</li>
+                <li>Ganas si llenas toda la cuadrícula sin errores.</li>
+            </ul>
+
+            <h3>Datos</h3>
+            <p>Los datos provienen de Baseball Cuba Data (etapas regulares y playoff desde la 40 Serie Nacional además de las Super Ligas y la Liga Élite).</p>
+            <p><small>Versión 1.0 - Desarrollado por Baseball Cuba Data.</small></p>
+        </div>
+        <div class="modal-footer">
+            <div class="banner-container">
+                <img src="/BANNER.jpg" alt="Baseball Cuba Data - Eslogan" class="banner-image">
+            </div>
+            <div class="footer-buttons">
+                <button id="closeModalBtn" class="btn-primary">¡A jugar!</button>
+                <label>
+                    <input type="checkbox" id="dontShowAgain"> No mostrar de nuevo en esta sesión
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<body>
+    <div class="app-container">
+        <header>
+            <div class="icon-header">
+                <img src="LOGO_PNG.png" alt="Logo Béisbol Cuba" class="header-logo" onerror="this.style.display='none'">
+            </div>
+            <h1>BASEBALL CUBA GRID</h1>
+            <p class="subtitle">un juego de Baseball Cuba Data</p>
+        </header>
+
+        <div class="score-panel">
+            <div class="score-box">
+                <span class="score-label">ACIERTOS</span>
+                <span class="score-value" id="scoreValue">0</span>
+                <span class="score-max">/ 9</span>
+            </div>
+            <button id="shareButton" class="reset-btn">📤 Compartir</button>
+            <button id="resetButton" class="reset-btn">🔄 Nuevo juego</button>
+        </div>
+
+        <div id="gridContainer" class="grid-container"></div>
+
+        <div class="control-panel" id="controlPanel" style="display: none;">
+            <div class="selection-info" id="selectionInfo"></div>
+            <div class="input-group">
+                <input type="text" id="playerInput" placeholder="Escribe el nombre del jugador..." autocomplete="off">
+                <ul id="suggestionsList" class="suggestions-list"></ul>
+            </div>
+            <div id="message" class="message"></div>
+        </div>
+
+        <footer>
+            <div class="social-links">
+                <a href="https://x.com/baseball_cuba" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-twitter"></i> X
+                </a>
+                <a href="https://www.facebook.com/profile.php?id=61584611741292" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-facebook"></i> Facebook
+                </a>
+                <a href="https://instagram.com/baseballcubadata" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-instagram"></i> Instagram
+                </a>
+            </div>
+            <small>Basado en datos históricos del béisbol cubano</small>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

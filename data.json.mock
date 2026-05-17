@@ -1,0 +1,524 @@
+{
+  "teams": [
+    {
+      "id": 19,
+      "name": "Holguín"
+    },
+    {
+      "id": 15,
+      "name": "Guantánamo"
+    },
+    {
+      "id": 3,
+      "name": "Centrales"
+    },
+    {
+      "id": 18,
+      "name": "Santiago de Cuba"
+    },
+    {
+      "id": 12,
+      "name": "Metropolitanos"
+    },
+    {
+      "id": 11,
+      "name": "Camagüey"
+    },
+    {
+      "id": 5,
+      "name": "Ganaderos"
+    },
+    {
+      "id": 25,
+      "name": "La Habana"
+    },
+    {
+      "id": 29,
+      "name": "Orientales (SL)"
+    },
+    {
+      "id": 14,
+      "name": "Cienfuegos"
+    }
+  ],
+  "players": [
+    {
+      "id": 648,
+      "name": "Martínez Pérez Javier",
+      "teams": [
+        25
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 660,
+      "name": "Ramírez Rodríguez Luis",
+      "teams": [
+        19
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 654,
+      "name": "Sánchez Martínez José",
+      "teams": [
+        12
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 738,
+      "name": "López Hernández Francisco",
+      "teams": [
+        18
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 1275,
+      "name": "Díaz Martínez Antonio",
+      "teams": [
+        25
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 663,
+      "name": "Martínez Pérez Miguel",
+      "teams": [
+        3,
+        14,
+        19
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 821,
+      "name": "Díaz García Carlos",
+      "teams": [
+        3
+      ],
+      "20+ HR": true,
+      "80+ RBI": false
+    },
+    {
+      "id": 679,
+      "name": "Martínez Ramírez José",
+      "teams": [
+        3,
+        19
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 1278,
+      "name": "Ramírez López Javier",
+      "teams": [
+        3,
+        14
+      ],
+      "20+ HR": false,
+      "80+ RBI": true
+    },
+    {
+      "id": 669,
+      "name": "Sánchez González Juan",
+      "teams": [
+        3,
+        14
+      ],
+      "20+ HR": true,
+      "80+ RBI": false
+    },
+    {
+      "id": 1279,
+      "name": "Martínez Rodríguez Pedro",
+      "teams": [
+        3,
+        14,
+        19
+      ],
+      "20+ HR": true,
+      "80+ RBI": false
+    },
+    {
+      "id": 841,
+      "name": "Rodríguez Martínez José",
+      "teams": [
+        3
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 662,
+      "name": "González Rodríguez Javier",
+      "teams": [
+        3,
+        14
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 1280,
+      "name": "López Martínez Carlos",
+      "teams": [
+        3
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 1261,
+      "name": "Hernández Ramírez Javier",
+      "teams": [
+        3
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 796,
+      "name": "Hernández Martínez Antonio",
+      "teams": [
+        18,
+        25
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 702,
+      "name": "Ramírez López Pedro",
+      "teams": [
+        12
+      ],
+      "20+ HR": false,
+      "80+ RBI": true
+    },
+    {
+      "id": 1269,
+      "name": "Hernández Pérez Antonio",
+      "teams": [
+        12
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 1052,
+      "name": "González López Luis",
+      "teams": [
+        11
+      ],
+      "20+ HR": true,
+      "80+ RBI": false
+    },
+    {
+      "id": 1051,
+      "name": "Rodríguez Hernández José",
+      "teams": [
+        11
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 1273,
+      "name": "López López Pedro",
+      "teams": [
+        5
+      ],
+      "20+ HR": true,
+      "80+ RBI": false
+    },
+    {
+      "id": 697,
+      "name": "Martínez López Pedro",
+      "teams": [
+        5,
+        18,
+        19
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 683,
+      "name": "López Sánchez Antonio",
+      "teams": [
+        5,
+        11,
+        19,
+        29
+      ],
+      "20+ HR": true,
+      "80+ RBI": false
+    },
+    {
+      "id": 795,
+      "name": "Ramírez Ramírez Carlos",
+      "teams": [
+        5,
+        11,
+        29
+      ],
+      "20+ HR": false,
+      "80+ RBI": true
+    },
+    {
+      "id": 647,
+      "name": "García Díaz Antonio",
+      "teams": [
+        5
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 762,
+      "name": "Pérez Rodríguez Francisco",
+      "teams": [
+        5
+      ],
+      "20+ HR": true,
+      "80+ RBI": false
+    },
+    {
+      "id": 720,
+      "name": "López Hernández Carlos",
+      "teams": [
+        19,
+        11,
+        5
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 1274,
+      "name": "López Pérez José",
+      "teams": [
+        5
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 755,
+      "name": "Hernández Hernández Francisco",
+      "teams": [
+        5
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 1254,
+      "name": "Hernández Díaz Juan",
+      "teams": [
+        5
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 1088,
+      "name": "Martínez Pérez Carlos",
+      "teams": [
+        5
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 1281,
+      "name": "Martínez García Rafael",
+      "teams": [
+        18,
+        11
+      ],
+      "20+ HR": true,
+      "80+ RBI": false
+    },
+    {
+      "id": 737,
+      "name": "Rodríguez García Javier",
+      "teams": [
+        18,
+        19
+      ],
+      "20+ HR": true,
+      "80+ RBI": false
+    },
+    {
+      "id": 747,
+      "name": "Díaz Pérez Miguel",
+      "teams": [
+        18,
+        11
+      ],
+      "20+ HR": true,
+      "80+ RBI": false
+    },
+    {
+      "id": 824,
+      "name": "Díaz Hernández Francisco",
+      "teams": [
+        19
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 684,
+      "name": "Sánchez Martínez Juan",
+      "teams": [
+        18,
+        15
+      ],
+      "20+ HR": false,
+      "80+ RBI": true
+    },
+    {
+      "id": 873,
+      "name": "Pérez Sánchez Pedro",
+      "teams": [
+        18
+      ],
+      "20+ HR": false,
+      "80+ RBI": true
+    },
+    {
+      "id": 730,
+      "name": "López García Luis",
+      "teams": [
+        18
+      ],
+      "20+ HR": false,
+      "80+ RBI": true
+    },
+    {
+      "id": 685,
+      "name": "Martínez Sánchez Javier",
+      "teams": [
+        18,
+        15
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 807,
+      "name": "López Sánchez Antonio",
+      "teams": [
+        19
+      ],
+      "20+ HR": true,
+      "80+ RBI": true
+    },
+    {
+      "id": 1057,
+      "name": "García García Juan",
+      "teams": [
+        19
+      ],
+      "20+ HR": true,
+      "80+ RBI": true
+    },
+    {
+      "id": 1026,
+      "name": "Rodríguez Hernández Juan",
+      "teams": [
+        11,
+        18,
+        29
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 1283,
+      "name": "Rodríguez González Carlos",
+      "teams": [
+        19
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 1284,
+      "name": "López Hernández José",
+      "teams": [
+        18,
+        19,
+        15
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 752,
+      "name": "Martínez Pérez Carlos",
+      "teams": [
+        18,
+        19
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 1285,
+      "name": "Ramírez Pérez Carlos",
+      "teams": [
+        19
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 756,
+      "name": "Pérez Hernández Antonio",
+      "teams": [
+        15
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 719,
+      "name": "Hernández Díaz Carlos",
+      "teams": [
+        18
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 708,
+      "name": "García García Miguel",
+      "teams": [
+        11
+      ],
+      "20+ HR": false,
+      "80+ RBI": false
+    },
+    {
+      "id": 718,
+      "name": "Martínez García Luis",
+      "teams": [
+        11
+      ],
+      "20+ HR": true,
+      "80+ RBI": true
+    }
+  ]
+}
