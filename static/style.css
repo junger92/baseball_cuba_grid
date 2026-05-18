@@ -73,6 +73,37 @@ h1 {
     gap: 6px;
 }
 
+/* Marcador de aciertos (centrado) */
+.score-box.centered {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 6px;
+    background: #04318b;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 40px;
+    font-weight: bold;
+    width: fit-content;
+    margin: 15px auto 10px auto;  /* centrado horizontal */
+}
+
+.score-label {
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+
+.score-value {
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.score-max {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
 .score-label {
     font-size: 0.8rem;
     letter-spacing: 1px;
