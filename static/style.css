@@ -12,16 +12,18 @@ body {
     justify-content: center;
     align-items: center;
     padding: 20px;
+    overflow-x: hidden;
 }
 
 .app-container {
-    max-width: 800px;
+    max-width: 100%;
     width: 100%;
     background: #e8eefc;
     border-radius: 32px;
     box-shadow: 0 20px 40px rgba(0,0,0,0.2);
     overflow: hidden;
-    padding: 24px;
+    padding: 16px;
+    overflow-x: hidden;
 }
 
 header {
@@ -106,12 +108,13 @@ h1 {
 /* Grid 3x3 con encabezados */
 .grid-container {
     display: grid;
-    grid-template-columns: 100px repeat(3, 1fr);
-    gap: 8px;
+    grid-template-columns: 70px repeat(3, minmax(0, 1fr));
+    gap: 6px;
     background: #e9ecef;
-    padding: 12px;
+    padding: 10px;
     border-radius: 20px;
     margin-bottom: 24px;
+    overflow-x: auto;
 }
 
 .cell {
@@ -396,29 +399,58 @@ footer {
     }
 
     .team-logo {
-        width: 30px;
-        height: 30px;
+        width: 28px;
+        height: 28px;
     }
     .team-name {
-        font-size: 0.6rem;
+        font-size: 0.55rem;
+    }
+    .cell.header.achievement-header {
+        font-size: 0.65rem;
     }
     .app-container {
         padding: 16px;
     }
     .grid-container {
-        grid-template-columns: 70px repeat(3, 1fr);
-        gap: 6px;
+        grid-template-columns: 60px repeat(3, minmax(0, 1fr));
+        gap: 5px;
+        padding: 8px;
     }
     .cell {
-        padding: 12px 4px;
-        font-size: 0.75rem;
-        min-height: 70px;
+        padding: 10px 4px;
+        font-size: 0.7rem;
+        min-height: 65px;
     }
     .cell .player-name {
         font-size: 0.8rem;
     }
 }
 
+/* Para móviles muy pequeños */
+@media (max-width: 480px) {
+    .grid-container {
+        grid-template-columns: 50px repeat(3, minmax(0, 1fr));
+        gap: 4px;
+        padding: 6px;
+    }
+    .cell {
+        padding: 8px 2px;
+        font-size: 0.65rem;
+        min-height: 55px;
+    }
+    .team-logo {
+        width: 22px;
+        height: 22px;
+    }
+    .cell .player-name {
+        font-size: 0.65rem;
+    }
+    .cell.header.achievement-header {
+        font-size: 0.6rem;
+        white-space: normal;
+        word-break: break-word;
+    }
+}
 /* Redes sociales */
 .social-links {
     display: flex;
