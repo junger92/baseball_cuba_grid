@@ -447,3 +447,62 @@ footer {
     margin: 20px 0 0;
     justify-content: center;
 }
+
+/* Sección de apoyo económico */
+.support-section {
+    text-align: center;
+    margin: 20px 0 15px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.support-section p {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.support-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.support-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    border-radius: 40px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+    font-size: 0.85rem;
+}
+
+.support-btn.coffee {
+    background-color: #ffdd99;
+    color: #6f4e1c;
+    border: 1px solid #e6c28a;
+}
+
+.support-btn.coffee:hover {
+    background-color: #ffcc80;
+    transform: translateY(-2px);
+}
+
+.support-btn.crypto {
+    background-color: #f0f0f0;
+    color: #03276d;
+    border: 1px solid #ccc;
+}
+
+.support-btn.crypto:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-2px);
+}
+
+.support-btn i {
+    font-size: 1.1rem;
+}
