@@ -80,6 +80,7 @@
         <div class="score-panel">
             
             <button id="shareButton" class="reset-btn">📤 Compartir</button>
+            <button id="surrenderButton" class="reset-btn">🏳️ Rendirse</button>
             <button id="resetButton" class="reset-btn">🔄 Nuevo juego</button>
         </div>
 
@@ -109,7 +110,15 @@
             <small>Basado en datos históricos del béisbol cubano</small>
         </footer>
     </div>
-
+    <!-- Modal de soluciones (Rendirse) -->
+    <div id="solutionsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-solutions-modal">&times;</span>
+            <h2>📋 Posibles soluciones</h2>
+            <div id="solutionsList" class="solutions-list"></div>
+            <button id="closeSolutionsBtn" class="btn-primary">Cerrar</button>
+        </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>

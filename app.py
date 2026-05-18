@@ -1,12 +1,19 @@
 from flask import Flask, request, jsonify, send_from_directory
 import json
 import random
+from collections import defaultdict
 
 app = Flask(__name__, static_folder='static', static_url_path='')
 
 # Cargar datos desde data.json
 with open('data.json', 'r', encoding='utf-8') as f:
     data = json.load(f)
+
+# Para pares de equipos (team1, team2) -> lista de nombres de jugadores
+pair_to_players = defaultdict(list)
+
+# Para (equipo, logro) -> lista de nombres de jugadores
+achievement_to_players = defaultdict(list)
 
 teams = data['teams']          # lista de dicts con id y name
 players = data['players']      # lista de dicts con id, name, teams, y logros
@@ -60,6 +67,20 @@ for team_id in team_id_to_name:
             if team_id in team_set and ach in player_achievements_map.get(pid, set()):
                 players_list.append(pid)
         team_achievement_players[key] = players_list
+
+for p in players:
+    name = p['name']
+    teams = p['teams']
+    # Pares de equipos
+    for i in range(len(teams)):
+        for j in range(i+1, len(teams)):
+            t1, t2 = sorted([teams[i], teams[j]])
+            pair_to_players[(t1, t2)].append(name)
+    # Logros
+    for ach in achievements:
+        if p.get(ach, False):
+            for t in teams:
+                achievement_to_players[(t, ach)].append(name)
 
 # Función auxiliar para verificar si un jugador cumple la celda
 def check_player(player_id, row_team_id, col_team_id, achievement=None):
@@ -191,6 +212,34 @@ def check():
             return jsonify({'valid': True, 'name': player['name']})
         else:
             return jsonify({'valid': False, 'error': f'{player["name"]} no jugó en {row_team} y {col_team} simultáneamente'})
+
+@app.route('/api/solutions', methods=['POST'])
+def get_solutions():
+    data = request.get_json()
+    rows = data.get('rows')          # lista de nombres de equipos (filas)
+    cols = data.get('cols')          # lista de nombres de equipos (primeras dos columnas)
+    achievement = data.get('achievement')  # nombre del logro (tercera columna)
+    filled_cells = data.get('filledCells', {})  # opcional: celdas ya llenas para no repetir (formato "row_col": player_name)
+
+    solutions = {}
+    for i, row_team in enumerate(rows):
+        row_id = team_name_to_id[row_team]
+        for j in range(3):
+            cell_key = f"{i}_{j}"
+            # Si la celda ya tiene solución (está llena), no la mostramos
+            if cell_key in filled_cells:
+                continue
+            if j < 2:  # columnas de equipos
+                col_team = cols[j]
+                col_id = team_name_to_id[col_team]
+                t1, t2 = sorted([row_id, col_id])
+                players_list = pair_to_players.get((t1, t2), [])
+                # Limitar a 5 jugadores para no saturar
+                solutions[cell_key] = players_list[:5]
+            else:  # columna de logro
+                players_list = achievement_to_players.get((row_id, achievement), [])
+                solutions[cell_key] = players_list[:5]
+    return jsonify(solutions)
 
 if __name__ == '__main__':
     app.run(debug=True)

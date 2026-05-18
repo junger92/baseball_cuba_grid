@@ -20,6 +20,89 @@ const closeModalBtn = document.getElementById('closeModalBtn');
 const dontShowAgainCheckbox = document.getElementById('dontShowAgain');
 const closeSpan = document.querySelector('.close-modal');
 
+const surrenderButton = document.getElementById('surrenderButton');
+const solutionsModal = document.getElementById('solutionsModal');
+const closeSolutionsBtn = document.getElementById('closeSolutionsBtn');
+const closeSolutionsSpan = document.querySelector('.close-solutions-modal');
+const solutionsListDiv = document.getElementById('solutionsList');
+
+async function showSolutions() {
+    if (!currentGrid) return;
+
+    // Construir objeto con celdas ya llenas (para no sugerir repetidos)
+    const filled = {};
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            const idx = i * 3 + j;
+            if (cells[idx]) {
+                filled[`${i}_${j}`] = cells[idx];
+            }
+        }
+    }
+
+    const payload = {
+        rows: currentGrid.rows,
+        cols: currentGrid.cols,
+        achievement: currentGrid.achievement,
+        filledCells: filled
+    };
+
+    try {
+        const response = await fetch('/api/solutions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const solutions = await response.json();
+
+        // Construir HTML
+        solutionsListDiv.innerHTML = '';
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                const cellKey = `${i}_${j}`;
+                if (filled[cellKey]) continue; // no mostrar celdas ya resueltas
+                const players = solutions[cellKey] || [];
+                const rowTeam = currentGrid.rows[i];
+                let colDesc = '';
+                if (j < 2) {
+                    colDesc = `Equipo: ${currentGrid.cols[j]}`;
+                } else {
+                    colDesc = `Logro: ${currentGrid.achievement}`;
+                }
+                const div = document.createElement('div');
+                div.className = 'solution-item';
+                div.innerHTML = `
+                    <strong>Fila ${i+1} (${rowTeam}) - ${colDesc}</strong><br>
+                    <div class="solution-players">
+                        ${players.length > 0 ? players.join(', ') : 'No se encontraron jugadores'}
+                    </div>
+                `;
+                solutionsListDiv.appendChild(div);
+            }
+        }
+        solutionsModal.style.display = 'flex';
+    } catch (err) {
+        console.error(err);
+        alert('Error al obtener soluciones. Intenta de nuevo.');
+    }
+}
+
+if (surrenderButton) {
+    surrenderButton.addEventListener('click', showSolutions);
+}
+
+function closeSolutionsModal() {
+    solutionsModal.style.display = 'none';
+}
+
+if (closeSolutionsBtn) closeSolutionsBtn.addEventListener('click', closeSolutionsModal);
+if (closeSolutionsSpan) closeSolutionsSpan.addEventListener('click', closeSolutionsModal);
+window.addEventListener('click', (event) => {
+    if (event.target === solutionsModal) {
+        closeSolutionsModal();
+    }
+});
+
 // Cargar nuevo grid desde el backend
 async function loadNewGrid() {
     try {
