@@ -2,7 +2,7 @@
 
 **Immaculate Grid** adaptado al béisbol cubano. Completa una cuadrícula 3×3 colocando un jugador que haya jugado para dos equipos (primeras dos columnas) o que haya alcanzado un logro estadístico (tercera columna). Pone a prueba tu conocimiento histórico de la pelota cubana.
 
-![Demo](https://via.placeholder.com/800x400?text=Captura+del+juego) <!-- Reemplaza con una imagen real -->
+![Demo](https://baseball-cuba-grid.onrender.com/) <!-- Reemplaza con una imagen real -->
 
 ## 🚀 Características
 
