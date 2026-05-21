@@ -50,6 +50,20 @@
     </div>
 </div>
 
+<!-- Modal para Transfermóvil -->
+<div id="transferModal" class="modal">
+    <div class="modal-content modal-transfer">
+        <span class="close-transfer">&times;</span>
+        <h2>Donación vía Transfermóvil</h2>
+        <div class="qr-container">
+            <!-- Reemplaza "ruta_del_qr.png" con la ruta real de tu código QR -->
+            <img src="/transfer_qr.jpg" alt="Código QR Transfermóvil" class="qr-image">
+            <p class="qr-note">Escanea con la aplicación Transfermóvil</p>
+            <p class="cuba-only">🔒 Solo válido dentro de Cuba</p>
+        </div>
+    </div>
+</div>
+
 <body>
     <div class="app-container">
         <header>
@@ -64,9 +78,13 @@
                         <!-- <a href="https://www.buymeacoffee.com/tuusuario" target="_blank" class="support-btn coffee">
                             <i class="fas fa-mug-hot"></i> Buy Me a Coffee
                         </a> -->
+                    
                     <a href="https://www.qvapay.com/payme/jorgeunger92?link=baseball-data" target="_blank" class="support-btn crypto">
                         <i class="fab fa-bitcoin"></i> Donar con QvaPay
                     </a>
+                    <button id="transferBtn" class="support-btn transfer">
+                        <i class="fas fa-mobile-alt"></i> Donar con Transfermóvil
+                    </button>
                     <a href="mailto:baseballcubadata@gmail.com" class="support-btn contact">
                         <i class="fas fa-envelope"></i> Contacto
                     </a>

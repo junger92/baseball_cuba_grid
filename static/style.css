@@ -613,3 +613,47 @@ footer {
     max-width: 90%;
     line-height: 1.4;
 }
+
+/* Botón Transfermóvil */
+.support-btn.transfer {
+    background-color: #2c7642;
+    color: white;
+    border: none;
+}
+.support-btn.transfer:hover {
+    background-color: #0f7a2f;
+    transform: translateY(-2px);
+}
+
+/* Modal Transfermóvil */
+.modal-transfer {
+    max-width: 400px;
+    text-align: center;
+}
+.qr-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin: 20px 0;
+}
+.qr-image {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    padding: 10px;
+}
+.qr-note {
+    font-size: 0.9rem;
+    color: #333;
+}
+.cuba-only {
+    font-weight: bold;
+    color: #b76b15;
+    background: #fef5e8;
+    padding: 6px 12px;
+    border-radius: 20px;
+    display: inline-block;
+}

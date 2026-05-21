@@ -28,6 +28,26 @@ const closeSolutionsBtn = document.getElementById('closeSolutionsBtn');
 const closeSolutionsSpan = document.querySelector('.close-solutions-modal');
 const solutionsListDiv = document.getElementById('solutionsList');
 
+// Transfermóvil modal
+const transferBtn = document.getElementById('transferBtn');
+const transferModal = document.getElementById('transferModal');
+const closeTransfer = document.querySelector('.close-transfer');
+
+if (transferBtn) {
+    transferBtn.addEventListener('click', () => {
+        transferModal.style.display = 'flex';
+    });
+}
+
+function closeTransferModal() {
+    transferModal.style.display = 'none';
+}
+
+if (closeTransfer) closeTransfer.addEventListener('click', closeTransferModal);
+window.addEventListener('click', (event) => {
+    if (event.target === transferModal) closeTransferModal();
+});
+
 if (resetBtn) {
     resetBtn.addEventListener('click', () => {
         clearGameState();
