@@ -5,6 +5,32 @@ from collections import defaultdict
 import os
 import datetime
 import hashlib
+import unicodedata
+
+def normalize_name(name: str) -> str:
+    """
+    Convierte a minúsculas y elimina acentos/diacríticos.
+    Ej: 'PÉREZ LÓPEZ Juan' -> 'perez lopez juan'
+    """
+    if not name:
+        return ""
+    # Normalizar a forma NFKD y eliminar caracteres no ASCII (acentos, diéresis, etc.)
+    nfkd = unicodedata.normalize('NFKD', name)
+    ascii_name = nfkd.encode('ASCII', 'ignore').decode('ASCII')
+    return ascii_name.lower()
+
+def reverse_name(name: str) -> str:
+    if not name:
+        return ""
+    name_list = name.split()
+    final_name = ""
+    for e in name_list:
+        if str.isupper(e):
+            final_name += (e + ' ')
+        else:
+            final_name = e + ' ' + final_name
+    
+    return final_name.strip()
 
 app = Flask(__name__, static_folder='static', static_url_path='')
 
@@ -42,6 +68,9 @@ achievements.sort()
 player_teams_map = {}  # player_id -> set de team_ids
 player_achievements_map = {}  # player_id -> set de achievement keys (solo los true)
 for p in players:
+    p['norm_name'] = normalize_name(p['name'])
+    p['right_name'] = reverse_name(p['name'])
+    p['right_name'] = normalize_name(p['right_name'])
     pid = p['id']
     player_teams_map[pid] = set(p['teams'])
     # Logros true
@@ -176,9 +205,10 @@ def suggest():
     query = request.args.get('q', '').lower().strip()
     if len(query) < 2:
         return jsonify([])
+    norm_query = normalize_name(query)  # pero ya está en minúsculas, solo acentos
     matches = []
     for p in players:
-        if query in p['name'].lower():
+        if query in p['norm_name'].lower() or query in p['right_name'].lower():
             matches.append(p['name'])
             if len(matches) >= 10:
                 break
