@@ -2,6 +2,9 @@ from flask import Flask, request, jsonify, send_from_directory
 import json
 import random
 from collections import defaultdict
+import os
+import datetime
+import hashlib
 
 app = Flask(__name__, static_folder='static', static_url_path='')
 
@@ -149,6 +152,15 @@ def generate_valid_grid():
         'achievement': achievement
     }
 
+def get_daily_grid():
+    today = datetime.date.today().isoformat()
+    seed = int(hashlib.md5(today.encode()).hexdigest()[:8], 16)
+    original_state = random.getstate()
+    random.seed(seed)
+    grid = generate_valid_grid()
+    random.setstate(original_state)
+    return grid
+
 # Endpoints
 @app.route('/')
 def index():
@@ -240,6 +252,16 @@ def get_solutions():
                 players_list = achievement_to_players.get((row_id, achievement), [])
                 solutions[cell_key] = players_list[:5]
     return jsonify(solutions)
+
+@app.route('/api/daily-grid', methods=['GET'])
+def daily_grid():
+    grid = get_daily_grid()
+    return jsonify(grid)
+
+@app.route('/api/config', methods=['GET'])
+def config():
+    is_dev = os.environ.get('ENVIRONMENT') != 'production'
+    return jsonify({'isDevelopment': is_dev})
 
 if __name__ == '__main__':
     app.run(debug=True)

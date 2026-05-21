@@ -3,6 +3,8 @@ let currentGrid = null;      // { rows: [], cols: [], achievement: string }
 let cells = Array(9).fill(null);
 let score = 0;
 let selectedRow = null, selectedCol = null;
+let gameActive = true;   // Indica si el juego está activo (no rendido)
+let isDevelopment = false;
 
 // Elementos DOM
 const gridContainer = document.getElementById('gridContainer');
@@ -26,8 +28,56 @@ const closeSolutionsBtn = document.getElementById('closeSolutionsBtn');
 const closeSolutionsSpan = document.querySelector('.close-solutions-modal');
 const solutionsListDiv = document.getElementById('solutionsList');
 
+if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+        loadNewGrid();  // usar loadGrid en su lugar? mejor mantener loadNewGrid para desarrollo
+        hideControlPanel();
+        gameActive = true;
+        playerInput.disabled = false;
+        const surrenderBtn = document.getElementById('surrenderButton');
+        if (surrenderBtn) {
+            surrenderBtn.textContent = '🏳️ Rendirse';
+            surrenderBtn.disabled = false;
+        }
+    });
+}
+
+// Al cargar la página
+fetch('/api/config')
+    .then(res => res.json())
+    .then(config => {
+        isDevelopment = config.isDevelopment;
+        if (!isDevelopment) {
+            const resetBtn = document.getElementById('resetButton');
+            if (resetBtn) resetBtn.style.display = 'none';
+        }
+        loadGrid();
+    })
+    .catch(err => {
+        console.error('Error al cargar configuración:', err);
+        loadGrid(); // fallback a modo normal
+    });
+
 async function showSolutions() {
     if (!currentGrid) return;
+
+    if (!gameActive) {
+        showMessage('Ya te has rendido. Inicia un nuevo juego.', 'error');
+        return;
+    }
+
+    // Desactivar el juego
+    gameActive = false;
+
+    // Deshabilitar el botón de rendirse
+    const surrenderBtn = document.getElementById('surrenderButton');
+    if (surrenderBtn) {
+        surrenderBtn.textContent = '🏳️ Rendido';
+        surrenderBtn.disabled = true;
+    }
+
+    // Deshabilitar el campo de entrada (opcional)
+    playerInput.disabled = true;
 
     // Construir objeto con celdas ya llenas (para no sugerir repetidos)
     const filled = {};
@@ -83,7 +133,14 @@ async function showSolutions() {
         solutionsModal.style.display = 'flex';
     } catch (err) {
         console.error(err);
-        alert('Error al obtener soluciones. Intenta de nuevo.');
+        showMessage('Error al obtener soluciones. Intenta de nuevo.', 'error');
+        // Si hay error, reactivar el juego
+        gameActive = true;
+        if (surrenderBtn) {
+            surrenderBtn.textContent = '🏳️ Rendirse';
+            surrenderBtn.disabled = false;
+        }
+        playerInput.disabled = false;
     }
 }
 
@@ -102,6 +159,39 @@ window.addEventListener('click', (event) => {
         closeSolutionsModal();
     }
 });
+
+async function loadGrid() {
+    const url = (isDevelopment === true) ? '/api/grid' : '/api/daily-grid';
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Error al cargar el grid');
+        const data = await response.json();
+        currentGrid = {
+            rows: data.rows,
+            cols: data.cols,
+            achievement: data.achievement
+        };
+        cells = Array(9).fill(null);
+        score = 0;
+        updateScore();
+        renderGrid();
+        hideControlPanel();
+        clearMessages();
+        playerInput.value = '';
+        selectedRow = null;
+        selectedCol = null;
+        gameActive = true;
+        playerInput.disabled = false;
+        const surrenderBtn = document.getElementById('surrenderButton');
+        if (surrenderBtn) {
+            surrenderBtn.textContent = '🏳️ Rendirse';
+            surrenderBtn.disabled = false;
+        }
+    } catch (error) {
+        console.error(error);
+        showMessage('Error al iniciar el juego. Recarga la página.', 'error');
+    }
+}
 
 // Cargar nuevo grid desde el backend
 async function loadNewGrid() {
@@ -123,6 +213,14 @@ async function loadNewGrid() {
         playerInput.value = '';
         selectedRow = null;
         selectedCol = null;
+        // Reactivar juego
+        gameActive = true;
+        playerInput.disabled = false;
+        const surrenderBtn = document.getElementById('surrenderButton');
+        if (surrenderBtn) {
+            surrenderBtn.textContent = '🏳️ Rendirse';
+            surrenderBtn.disabled = false;
+        }
     } catch (error) {
         console.error(error);
         showMessage('Error al iniciar el juego. Recarga la página.', 'error');
@@ -206,11 +304,16 @@ function createDataCell(row, col) {
 }
 
 function onCellClick(row, col) {
+    if (!gameActive) {
+        showMessage('⚠️ Ya te has rendido. Inicia un nuevo juego para seguir jugando.', 'error');
+        return;
+    }
     const idx = row * 3 + col;
     if (cells[idx] !== null) {
         showMessage(`Ya has completado esta celda con ${cells[idx]}`, 'error');
         return;
     }
+
     selectedRow = row;
     selectedCol = col;
     const isAchievementCol = (col === 2);
@@ -337,6 +440,14 @@ function updateScore() {
 resetBtn.addEventListener('click', () => {
     loadNewGrid();
     hideControlPanel();
+    // Restaurar estado activo
+    gameActive = true;
+    playerInput.disabled = false;
+    const surrenderBtn = document.getElementById('surrenderButton');
+    if (surrenderBtn) {
+        surrenderBtn.textContent = '🏳️ Rendirse';
+        surrenderBtn.disabled = false;
+    }
 });
 
 // Modal de bienvenida
