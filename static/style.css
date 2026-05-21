@@ -594,3 +594,13 @@ footer {
     font-size: 0.9rem;
     color: #333;
 }
+
+.support-btn.contact {
+    background-color: #3498db;
+    color: white;
+    border: none;
+}
+.support-btn.contact:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
