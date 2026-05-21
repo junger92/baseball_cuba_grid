@@ -30,7 +30,8 @@ const solutionsListDiv = document.getElementById('solutionsList');
 
 if (resetBtn) {
     resetBtn.addEventListener('click', () => {
-        loadNewGrid();  // usar loadGrid en su lugar? mejor mantener loadNewGrid para desarrollo
+        clearGameState();
+        loadGrid();   // Esto generará un nuevo grid aleatorio (porque isDevelopment true)
         hideControlPanel();
         gameActive = true;
         playerInput.disabled = false;
@@ -68,6 +69,7 @@ async function showSolutions() {
 
     // Desactivar el juego
     gameActive = false;
+    saveGameState();   // <-- Guardar que nos rendimos
 
     // Deshabilitar el botón de rendirse
     const surrenderBtn = document.getElementById('surrenderButton');
@@ -161,32 +163,66 @@ window.addEventListener('click', (event) => {
 });
 
 async function loadGrid() {
-    const url = (isDevelopment === true) ? '/api/grid' : '/api/daily-grid';
+    const url = isDevelopment ? '/api/grid' : '/api/daily-grid';
     try {
         const response = await fetch(url);
-        if (!response.ok) throw new Error('Error al cargar el grid');
         const data = await response.json();
-        currentGrid = {
+        const newGrid = {
             rows: data.rows,
             cols: data.cols,
             achievement: data.achievement
         };
-        cells = Array(9).fill(null);
-        score = 0;
-        updateScore();
-        renderGrid();
+        
+        // Verificar si hay un estado guardado para hoy y que coincida con el grid recibido
+        const savedState = loadGameState();
+        if (savedState && 
+            JSON.stringify(savedState.grid) === JSON.stringify(newGrid)) {
+            // Restaurar estado
+            currentGrid = savedState.grid;
+            cells = savedState.cells;
+            score = savedState.score;
+            gameActive = !savedState.surrendered;
+            updateScore();
+            renderGrid();
+            if (savedState.surrendered) {
+                // Deshabilitar controles
+                playerInput.disabled = true;
+                const surrenderBtn = document.getElementById('surrenderButton');
+                if (surrenderBtn) {
+                    surrenderBtn.textContent = '🏳️ Rendido';
+                    surrenderBtn.disabled = true;
+                }
+                showMessage('⚠️ Ya te rendiste en este grid. Inicia un nuevo juego (solo en desarrollo).', 'error');
+            } else {
+                // Reactivar controles normalmente
+                playerInput.disabled = false;
+                const surrenderBtn = document.getElementById('surrenderButton');
+                if (surrenderBtn) {
+                    surrenderBtn.textContent = '🏳️ Rendirse';
+                    surrenderBtn.disabled = false;
+                }
+            }
+        } else {
+            // No hay estado guardado, empezar nuevo juego
+            currentGrid = newGrid;
+            cells = Array(9).fill(null);
+            score = 0;
+            gameActive = true;
+            updateScore();
+            renderGrid();
+            playerInput.disabled = false;
+            const surrenderBtn = document.getElementById('surrenderButton');
+            if (surrenderBtn) {
+                surrenderBtn.textContent = '🏳️ Rendirse';
+                surrenderBtn.disabled = false;
+            }
+            clearGameState(); // Por si había un estado de otro grid
+        }
         hideControlPanel();
         clearMessages();
         playerInput.value = '';
         selectedRow = null;
         selectedCol = null;
-        gameActive = true;
-        playerInput.disabled = false;
-        const surrenderBtn = document.getElementById('surrenderButton');
-        if (surrenderBtn) {
-            surrenderBtn.textContent = '🏳️ Rendirse';
-            surrenderBtn.disabled = false;
-        }
     } catch (error) {
         console.error(error);
         showMessage('Error al iniciar el juego. Recarga la página.', 'error');
@@ -417,6 +453,7 @@ async function checkAndFill(playerName) {
             score++;
             updateScore();
             renderGrid();
+            saveGameState();   // <-- Guardar progreso
             showMessage(`✅ Correcto: ${result.name} cumple la condición`, 'success');
             hideControlPanel();
             if (score === 9) {
@@ -534,3 +571,43 @@ document.addEventListener('DOMContentLoaded', () => {
     loadNewGrid();
     showModal();
 });
+
+// Obtener la fecha actual en formato YYYY-MM-DD
+function getTodayKey() {
+    const today = new Date();
+    return today.toISOString().slice(0, 10);
+}
+
+// Guardar estado actual en localStorage
+function saveGameState() {
+    if (!currentGrid) return;
+    const state = {
+        date: getTodayKey(),
+        grid: {
+            rows: currentGrid.rows,
+            cols: currentGrid.cols,
+            achievement: currentGrid.achievement
+        },
+        cells: cells,          // array de 9 strings (null o nombre del jugador)
+        score: score,
+        surrendered: !gameActive,   // si gameActive es false, significa rendido
+        isDevelopment: isDevelopment  // para saber si estamos en modo dev
+    };
+    localStorage.setItem('baseball_grid_state', JSON.stringify(state));
+}
+
+// Cargar estado desde localStorage (solo si coincide con la fecha actual)
+function loadGameState() {
+    const saved = localStorage.getItem('baseball_grid_state');
+    if (!saved) return null;
+    const state = JSON.parse(saved);
+    // Validar que sea del día de hoy y que el modo (dev/prod) coincida
+    if (state.date !== getTodayKey()) return null;
+    if (state.isDevelopment !== isDevelopment) return null;
+    return state;
+}
+
+// Limpiar estado (cuando se inicia un nuevo juego en modo dev)
+function clearGameState() {
+    localStorage.removeItem('baseball_grid_state');
+}
