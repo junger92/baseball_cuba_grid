@@ -222,6 +222,7 @@ def check():
     col_team = data_req.get('colTeam')       # None si es columna de logro
     achievement = data_req.get('achievement') # Solo para columna de logro
     is_achievement_col = data_req.get('isAchievementCol', False)
+    used_players = data.get('usedPlayers', [])   # lista de nombres
 
     # Buscar jugador por nombre exacto (insensible)
     player = None
@@ -229,11 +230,16 @@ def check():
         if p['name'].lower() == player_name.lower():
             player = p
             break
+    
     if not player:
         return jsonify({'valid': False, 'error': 'Jugador no encontrado'})
 
     player_id = player['id']
     row_id = team_name_to_id.get(row_team)
+
+    if player['name'] in used_players:
+        return jsonify({'valid': False, 'error': f'{player["name"]} ya ha sido utilizado en este grid. Elige otro.'})
+    
     if not row_id:
         return jsonify({'valid': False, 'error': 'Equipo de fila no válido'})
 

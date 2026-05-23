@@ -5,6 +5,7 @@ let score = 0;
 let selectedRow = null, selectedCol = null;
 let gameActive = true;   // Indica si el juego está activo (no rendido)
 let isDevelopment = false;
+let usedPlayers = [];    // Almacena los nombres de los jugadores ya usados
 
 // Elementos DOM
 const gridContainer = document.getElementById('gridContainer');
@@ -200,6 +201,7 @@ async function loadGrid() {
             // Restaurar estado
             currentGrid = savedState.grid;
             cells = savedState.cells;
+            usedPlayers = cells.filter(cell => cell !== null);  // Reconstruir
             score = savedState.score;
             gameActive = !savedState.surrendered;
             updateScore();
@@ -226,6 +228,7 @@ async function loadGrid() {
             // No hay estado guardado, empezar nuevo juego
             currentGrid = newGrid;
             cells = Array(9).fill(null);
+            usedPlayers = [];
             score = 0;
             gameActive = true;
             updateScore();
@@ -261,6 +264,7 @@ async function loadNewGrid() {
             achievement: data.achievement
         };
         cells = Array(9).fill(null);
+        usedPlayers = [];
         score = 0;
         updateScore();
         renderGrid();
@@ -447,6 +451,14 @@ document.addEventListener('click', (e) => {
 async function checkAndFill(playerName) {
     if (selectedRow === null || selectedCol === null) return;
 
+    // Validar que el jugador no haya sido usado antes
+    if (usedPlayers.includes(playerName)) {
+        showMessage(`❌ El jugador ${playerName} ya ha sido utilizado en este grid. Elige otro.`, 'error');
+        playerInput.value = '';
+        playerInput.focus();
+        return;
+    }
+
     const rowTeam = currentGrid.rows[selectedRow];
     const colTeam = selectedCol === 2 ? null : currentGrid.cols[selectedCol];
     const achievement = selectedCol === 2 ? currentGrid.achievement : null;
@@ -463,13 +475,15 @@ async function checkAndFill(playerName) {
                 rowTeam: rowTeam,
                 colTeam: colTeam,
                 achievement: achievement,
-                isAchievementCol: isAchievementCol
+                isAchievementCol: isAchievementCol,
+                usedPlayers: usedPlayers   // <-- enviar lista
             })
         });
         const result = await response.json();
 
         if (result.valid) {
             cells[idx] = result.name;
+            usedPlayers.push(result.name);   // <-- Agregar
             score++;
             updateScore();
             renderGrid();
@@ -495,6 +509,7 @@ function updateScore() {
 }
 
 resetBtn.addEventListener('click', () => {
+    usedPlayers = [];
     loadNewGrid();
     hideControlPanel();
     // Restaurar estado activo
