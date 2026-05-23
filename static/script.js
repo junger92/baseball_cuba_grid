@@ -168,7 +168,11 @@ async function showSolutions() {
 }
 
 if (surrenderButton) {
-    surrenderButton.addEventListener('click', showSolutions);
+    surrenderButton.addEventListener('click', () => {
+        if (confirm('⚠️ ¿Estás seguro de que quieres rendirte? Después de esto no podrás seguir completando el grid de hoy. Solo podrás ver las soluciones.')) {
+            showSolutions();
+        }
+    });
 }
 
 function closeSolutionsModal() {
