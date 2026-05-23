@@ -27,7 +27,10 @@ def export_to_json(db_path, output_file='data.json'):
                 "name": player_name,
                 "teams": set(),
                 "20+ HR": False,
-                "80+ RBI": False
+                "80+ RBI": False,
+                "3HR": False,
+                "10K": False,
+                "MVP": False
             }
         player_teams[player_id]["teams"].add(team_id)
     
@@ -61,6 +64,56 @@ def export_to_json(db_path, output_file='data.json'):
         if rbi >= 80:
             player_teams[player_id]["80+ RBI"] = True
 
+    # Verificar para cada jugador si ha tenido un juego de 3 hr
+    cursor.execute("""
+        SELECT o.player_id, hr as HR, te.number_edition, te.t_name
+        FROM game_by_game_offensive o
+        JOIN game g ON o.game_id = g.game_id
+        JOIN tournament_edition te ON g.edition_id = te.edition_id
+        WHERE 
+        date_iso > "2000-05-17" and 
+        o.hr >= 3
+        GROUP BY player_id
+    """)
+    for player_id, hr, ne, ne in cursor.fetchall():
+        if hr >= 3:
+            player_teams[player_id]["3HR"] = True
+    
+    # Verificar para cada jugador si ha tenido un juego de 10 ponches
+    cursor.execute("""
+        SELECT o.player_id, so as SO, te.number_edition, te.t_name
+        FROM game_by_game_pitch o
+        JOIN game g ON o.game_id = g.game_id
+        JOIN tournament_edition te ON g.edition_id = te.edition_id
+        WHERE 
+        date_iso > "2000-05-17" and 
+        o.so >= 10
+        GROUP BY player_id
+    """)
+    for player_id, so, ne, ne in cursor.fetchall():
+        if so >= 10:
+            player_teams[player_id]["10K"] = True
+
+    # Verificar para cada jugador ha recibido el premio MVP
+    cursor.execute("""
+        SELECT pa.player_id, te.number_edition
+        FROM player_award pa
+        JOIN tournament_edition te ON pa.edition_id = te.edition_id
+        WHERE 
+        te.number_edition >= 40 and te.t_name = "Serie Nacional de Béisbol"
+        GROUP BY te.number_edition
+
+        UNION ALL
+
+        SELECT pa.player_id, te.number_edition
+        FROM player_award pa
+        JOIN tournament_edition te ON pa.edition_id = te.edition_id
+        WHERE 
+        te.t_name = "Liga Élite del Béisbol Cubano"
+        GROUP BY te.number_edition
+    """)
+    for player_id, ne in cursor.fetchall():
+        player_teams[player_id]["MVP"] = True
     # 4. Construir lista final de jugadores
     players_list = []
     for pid, data in player_teams.items():
@@ -69,8 +122,11 @@ def export_to_json(db_path, output_file='data.json'):
             "id": pid,
             "name": data["name"],
             "teams": list(data["teams"]),
-            "20+ HR": data["20+ HR"],
-            "80+ RBI": data["80+ RBI"]
+            "+20 HR EN UN TORNEO": data["20+ HR"],
+            "+80 CI EN UN TORNEO": data["80+ RBI"],
+            "+3 HR EN UN JUEGO": data["3HR"],
+            "+10 SO EN UN JUEGO": data["10K"],
+            "MVP": data["MVP"]
         })
 
     conn.close()
