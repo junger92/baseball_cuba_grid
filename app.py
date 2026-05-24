@@ -6,6 +6,21 @@ import os
 import datetime
 import hashlib
 import unicodedata
+import re
+
+# Patrón para emojis (cubre rangos comunes)
+emoji_pattern = re.compile("["
+    u"\U0001F600-\U0001F64F"  # emoticons
+    u"\U0001F300-\U0001F5FF"  # símbolos y pictogramas
+    u"\U0001F680-\U0001F6FF"  # transporte y mapas
+    u"\U0001F1E0-\U0001F1FF"  # banderas
+    u"\U00002702-\U000027B0"
+    u"\U000024C2-\U0001F251"
+    "]+", flags=re.UNICODE)
+
+def is_emoji(s: str) -> bool:
+    """Retorna True si la cadena completa es un emoji (uno o varios)."""
+    return bool(emoji_pattern.fullmatch(s))
 
 def normalize_name(name: str) -> str:
     """
@@ -72,6 +87,7 @@ for p in players:
     p['right_name'] = reverse_name(p['name'])
     p['right_name'] = normalize_name(p['right_name'])
     pid = p['id']
+    p['emojis'] = p.get('emojis', '')   # si no existe, cadena vacía
     player_teams_map[pid] = set(p['teams'])
     # Logros true
     ach_set = set()
@@ -203,16 +219,20 @@ def get_grid():
 @app.route('/api/suggest', methods=['GET'])
 def suggest():
     query = request.args.get('q', '').lower().strip()
-    if len(query) < 2:
+    if len(query) < 2 and not is_emoji(query):
         return jsonify([])
+    
     norm_query = normalize_name(query)  # pero ya está en minúsculas, solo acentos
     matches = []
     for p in players:
         if query in p['norm_name'].lower() or query in p['right_name'].lower():
-            matches.append(p['name'])
-            if len(matches) >= 10:
-                break
-    return jsonify(matches)
+            matches.append({'name': p['name'], 'emojis': p['emojis']})
+        elif query in p['emojis']:
+            print(p)
+            matches.append({'name': p['name'], 'emojis': p['emojis']})
+        if len(matches) >= 10:
+            break
+    return jsonify([{'name': m['name'], 'emojis': m['emojis']} for m in matches])
 
 @app.route('/api/check', methods=['POST'])
 def check():
@@ -248,7 +268,11 @@ def check():
             return jsonify({'valid': False, 'error': 'Logro no especificado'})
         valid = check_player(player_id, row_id, None, achievement)
         if valid:
-            return jsonify({'valid': True, 'name': player['name']})
+            return jsonify({
+                'valid': True,
+                'name': player['name'],
+                'emojis': player['emojis']
+            })
         else:
             return jsonify({'valid': False, 'error': f'{player["name"]} no cumple el logro {achievement}'})
     else:
@@ -257,7 +281,11 @@ def check():
             return jsonify({'valid': False, 'error': 'Equipo de columna no válido'})
         valid = check_player(player_id, row_id, col_id, None)
         if valid:
-            return jsonify({'valid': True, 'name': player['name']})
+            return jsonify({
+                'valid': True,
+                'name': player['name'],
+                'emojis': player['emojis']
+            })
         else:
             return jsonify({'valid': False, 'error': f'{player["name"]} no jugó en {row_team} y {col_team} simultáneamente'})
 

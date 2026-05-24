@@ -6,6 +6,7 @@ let selectedRow = null, selectedCol = null;
 let gameActive = true;   // Indica si el juego está activo (no rendido)
 let isDevelopment = false;
 let usedPlayers = [];    // Almacena los nombres de los jugadores ya usados
+let cellsEmojis = Array(9).fill('');
 
 // Elementos DOM
 const gridContainer = document.getElementById('gridContainer');
@@ -205,7 +206,9 @@ async function loadGrid() {
             // Restaurar estado
             currentGrid = savedState.grid;
             cells = savedState.cells;
+            cellsEmojis = savedState.cellsEmojis;
             usedPlayers = cells.filter(cell => cell !== null);  // Reconstruir
+            
             score = savedState.score;
             gameActive = !savedState.surrendered;
             updateScore();
@@ -232,6 +235,7 @@ async function loadGrid() {
             // No hay estado guardado, empezar nuevo juego
             currentGrid = newGrid;
             cells = Array(9).fill(null);
+            cellsEmojis = Array(9).fill('');
             usedPlayers = [];
             score = 0;
             gameActive = true;
@@ -268,6 +272,7 @@ async function loadNewGrid() {
             achievement: data.achievement
         };
         cells = Array(9).fill(null);
+        cellsEmojis = Array(9).fill('');
         usedPlayers = [];
         score = 0;
         updateScore();
@@ -313,7 +318,9 @@ function renderGrid() {
             const cell = createDataCell(i, j);
             if (filledName) {
                 cell.classList.add('filled');
-                cell.innerHTML = `<div class="player-name">${filledName}</div><div class="check-mark">✓</div>`;
+                // Buscar emojis asociados al jugador (podemos guardarlos en cellsEmojis array)
+                const emojis = cellsEmojis[idx] || '';
+                cell.innerHTML = `<div class="player-name">${filledName} ${emojis}</div><div class="check-mark">✓</div>`;
             } else {
                 cell.innerHTML = `<div class="player-name">???</div>`;
             }
@@ -429,7 +436,7 @@ playerInput.addEventListener('input', async () => {
         try {
             const res = await fetch(`/api/suggest?q=${encodeURIComponent(query)}`);
             const names = await res.json();
-            suggestionsList.innerHTML = names.map(name => `<li data-name="${name}">${name}</li>`).join('');
+            suggestionsList.innerHTML = names.map(item => `<li data-name="${item.name}" data-emojis="${item.emojis}">${item.name} ${item.emojis}</li>`).join('');
             document.querySelectorAll('#suggestionsList li').forEach(li => {
                 li.addEventListener('click', () => {
                     playerInput.value = li.dataset.name;
@@ -487,6 +494,7 @@ async function checkAndFill(playerName) {
 
         if (result.valid) {
             cells[idx] = result.name;
+            cellsEmojis[idx] = result.emojis || '';
             usedPlayers.push(result.name);   // <-- Agregar
             score++;
             updateScore();
@@ -628,6 +636,7 @@ function saveGameState() {
             achievement: currentGrid.achievement
         },
         cells: cells,          // array de 9 strings (null o nombre del jugador)
+        cellsEmojis: cellsEmojis,
         score: score,
         surrendered: !gameActive,   // si gameActive es false, significa rendido
         isDevelopment: isDevelopment  // para saber si estamos en modo dev
