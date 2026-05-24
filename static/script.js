@@ -35,6 +35,20 @@ const transferBtn = document.getElementById('transferBtn');
 const transferModal = document.getElementById('transferModal');
 const closeTransfer = document.querySelector('.close-transfer');
 
+// Eliminar celda al hacer clic en el ícono de basura
+gridContainer.addEventListener('click', (e) => {
+    const trashIcon = e.target.closest('.trash-icon');
+    if (!trashIcon) return;
+
+    e.stopPropagation(); // Evita que el clic se propague a la celda (y la seleccione)
+
+    const row = parseInt(trashIcon.dataset.row);
+    const col = parseInt(trashIcon.dataset.col);
+    if (!isNaN(row) && !isNaN(col)) {
+        removeCell(row, col);
+    }
+});
+
 if (transferBtn) {
     transferBtn.addEventListener('click', () => {
         transferModal.style.display = 'flex';
@@ -294,6 +308,46 @@ async function loadNewGrid() {
         console.error(error);
         showMessage('Error al iniciar el juego. Recarga la página.', 'error');
     }
+
+    
+}
+
+function removeCell(row, col) {
+    const idx = row * 3 + col;
+
+    // Verificar si el juego sigue activo (no rendido)
+    if (!gameActive) {
+        showMessage('⚠️ No puedes modificar celdas después de rendirte. Inicia un nuevo juego.', 'error');
+        return;
+    }
+
+    // Verificar que la celda tenga contenido
+    if (cells[idx] === null) {
+        showMessage('Esta celda ya está vacía.', 'info');
+        return;
+    }
+
+    const playerName = cells[idx];
+
+    // Eliminar de la lista de jugadores usados
+    const playerIndex = usedPlayers.indexOf(playerName);
+    if (playerIndex !== -1) usedPlayers.splice(playerIndex, 1);
+
+    // Vaciar la celda y su emoji (si existe)
+    cells[idx] = null;
+    if (typeof cellsEmojis !== 'undefined') cellsEmojis[idx] = '';
+
+    // Restar un punto
+    score--;
+    updateScore();
+
+    // Re-renderizar el grid
+    renderGrid();
+
+    // Guardar estado (para que persista tras recarga)
+    saveGameState();
+
+    showMessage(`🧹 Celda eliminada. Has perdido un punto.`, 'info');
 }
 
 // Renderiza la cuadrícula 3x3 con encabezados
@@ -320,7 +374,9 @@ function renderGrid() {
                 cell.classList.add('filled');
                 // Buscar emojis asociados al jugador (podemos guardarlos en cellsEmojis array)
                 const emojis = cellsEmojis[idx] || '';
-                cell.innerHTML = `<div class="player-name">${filledName} ${emojis}</div><div class="check-mark">✓</div>`;
+                cell.innerHTML = `<div class="player-name">${filledName} ${emojis}</div><div class="check-mark">✓</div><div class="cell-actions">
+            <i class="fas fa-trash-alt trash-icon" data-row="${i}" data-col="${j}"></i>
+        </div>`;
             } else {
                 cell.innerHTML = `<div class="player-name">???</div>`;
             }

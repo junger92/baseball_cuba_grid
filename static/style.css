@@ -149,9 +149,10 @@ h1 {
 }
 
 .cell {
+    position: relative;
     background: white;
     border-radius: 12px;
-    padding: 16px 8px;
+    padding: 12px 8px 24px 8px;  /* arriba derecha abajo izquierda */;
     text-align: center;
     font-weight: 600;
     font-size: 0.9rem;
@@ -162,6 +163,33 @@ h1 {
     flex-direction: column;
     justify-content: center;
     cursor: pointer;
+}
+
+/* Contenedor de acciones (ícono) */
+.cell-actions {
+    position: absolute;
+    bottom: 4px;      /* en lugar de top */
+    right: 6px;
+}
+
+/* Ajuste para móviles */
+@media (max-width: 600px) {
+    .cell-actions {
+        bottom: 2px;
+        right: 4px;
+    }
+}
+
+/* Estilo del ícono de basura */
+.trash-icon {
+    color: #aaa;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.trash-icon:hover {
+    color: #e74c3c;
 }
 
 .cell.header {
@@ -203,6 +231,7 @@ h1 {
     background: #a5d6a7;
     color: #1b5e20;
     border-left: 4px solid #2e7d32;
+    padding-bottom: 24px;  /* espacio para el ícono */
 }
 
 .cell.filled:hover {
@@ -422,6 +451,12 @@ footer {
 
 /* responsive */
 @media (max-width: 600px) {
+    .trash-icon {
+        font-size: 1rem;
+        top: 2px;
+        right: 4px;
+    }
+
     .social-links {
         gap: 12px;
     }
